@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sea Slug Jelly</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Zen+Kaku+Gothic+New:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#ebe3d6;overflow:hidden}a{color:#2b2620}a:hover{color:#56298f}</style>
+</helmet>
+<div data-screen-label="Sea Slug Jelly" style="position:relative;width:100%;height:100vh;min-height:520px;overflow:hidden;background:#ebe3d6;color:#2b2620;font-family:'IBM Plex Mono',monospace">
+  <div ref="{{ stageRef }}" style="position:absolute;inset:0;cursor:grab;touch-action:none"></div>
+
+  <div style="position:absolute;top:28px;left:32px;display:flex;flex-direction:column;gap:10px;pointer-events:none;max-width:calc(100% - 64px)">
+    <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.6">Soft-body study · Nº 02</div>
+    <div style="font-family:'Instrument Serif',serif;font-size:60px;line-height:0.88;letter-spacing:-0.01em">Sea Slug<br><i style="padding-left:0.55em">Jelly.</i></div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;line-height:1.6;opacity:0.78">
+      <span>タップで、ぷるん。</span>
+      <span>ドラッグで、のびーる。</span>
+      <span>背景タップで、ジャンプ。</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:32px;bottom:26px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.55;pointer-events:none">— Tap. Squish. Let go.</div>
+
+  <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.5;pointer-events:none">Growing a sea slug…</div>
+  </sc-if>
+
+  <sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;right:20px;bottom:20px;width:212px;box-sizing:border-box;padding:14px;display:flex;flex-direction:column;gap:14px;background:rgba(251,248,242,0.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(43,38,32,0.12);border-radius:10px;font-size:10px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="letter-spacing:0.14em;text-transform:uppercase;opacity:0.6">Species</div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+          <button onClick="{{ pickA }}" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 2px 6px;background:{{ bgA }};border:1px solid {{ bdA }};border-radius:7px;cursor:pointer;font:inherit;color:inherit;font-size:9px">
+            <span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#2b4fc4 0 55%,#f4a02a 55% 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.1)"></span>
+            <span>Chromo</span>
+          </button>
+          <button onClick="{{ pickB }}" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 2px 6px;background:{{ bgB }};border:1px solid {{ bdB }};border-radius:7px;cursor:pointer;font:inherit;color:inherit;font-size:9px">
+            <span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7d4cbd 0 55%,#f5d23a 55% 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.1)"></span>
+            <span>Hypselo</span>
+          </button>
+          <button onClick="{{ pickC }}" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 2px 6px;background:{{ bgC }};border:1px solid {{ bdC }};border-radius:7px;cursor:pointer;font:inherit;color:inherit;font-size:9px">
+            <span style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#f6ece7 0 55%,#d3283b 55% 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.12)"></span>
+            <span>Gonio</span>
+          </button>
+        </div>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;justify-content:space-between;letter-spacing:0.14em;text-transform:uppercase"><span style="opacity:0.6">Softness</span><span>{{ softLabel }}</span></div>
+        <input type="range" min="0" max="100" value="{{ softPct }}" onChange="{{ onSoft }}" style="width:100%;margin:0;accent-color:#2b2620">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px">
+        <div style="display:flex;justify-content:space-between;letter-spacing:0.14em;text-transform:uppercase"><span style="opacity:0.6">Wobble</span><span>{{ wobLabel }}</span></div>
+        <input type="range" min="0" max="100" value="{{ wobPct }}" onChange="{{ onWob }}" style="width:100%;margin:0;accent-color:#2b2620">
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button onClick="{{ onDrop }}" style="padding:8px 0;background:#2b2620;color:#f6f1e8;border:0;border-radius:6px;font:inherit;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer" style-hover="background:#46403a">Drop</button>
+        <button onClick="{{ onReset }}" style="padding:8px 0;background:transparent;color:#2b2620;border:1px solid rgba(43,38,32,0.25);border-radius:6px;font:inherit;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer" style-hover="background:rgba(43,38,32,0.06)">Reset</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;opacity:0.75">
+        <input type="checkbox" checked="{{ lattice }}" onChange="{{ onLattice }}" style="margin:0;accent-color:#2b2620">
+        <span>Show lattice</span>
+      </label>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoJiggle&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;showPanel&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+class Component extends DCLogic {
+  state = { species: 'chromodoris', softness: 0.65, wobble: 0.7, lattice: false, ready: false };
+  stageRef = React.createRef();
+  componentDidMount() {
+    const url = new URL('./sea-slug-jelly.js', document.baseURI).href;
+    import(url).then(m => {
+      if (!this.stageRef.current) return;
+      this.sim = m.createJelly(this.stageRef.current, {
+        species: this.state.species, softness: this.state.softness, wobble: this.state.wobble,
+        autoJiggle: this.props.autoJiggle ?? true
+      });
+      this.setState({ ready: true });
+    }).catch(e => console.error('sea slug load failed', e));
+  }
+  componentDidUpdate() { if (this.sim) this.sim.setAutoJiggle(this.props.autoJiggle ?? true); }
+  componentWillUnmount() { if (this.sim) this.sim.dispose(); }
+  pick(name) { this.setState({ species: name }); this.sim && this.sim.setSpecies(name); }
+  renderVals() {
+    const s = this.state, on = n => s.species === n;
+    const bd = n => on(n) ? '#2b2620' : 'rgba(43,38,32,0.14)';
+    const bg = n => on(n) ? 'rgba(255,255,255,0.75)' : 'transparent';
+    return {
+      stageRef: this.stageRef,
+      loading: !s.ready,
+      showPanel: this.props.showPanel ?? true,
+      bdA: bd('chromodoris'), bdB: bd('hypselodoris'), bdC: bd('goniobranchus'),
+      bgA: bg('chromodoris'), bgB: bg('hypselodoris'), bgC: bg('goniobranchus'),
+      pickA: () => this.pick('chromodoris'), pickB: () => this.pick('hypselodoris'), pickC: () => this.pick('goniobranchus'),
+      softPct: Math.round(s.softness * 100), wobPct: Math.round(s.wobble * 100),
+      softLabel: s.softness.toFixed(2), wobLabel: s.wobble.toFixed(2),
+      onSoft: e => { const v = +e.target.value / 100; this.setState({ softness: v }); this.sim && this.sim.setParams({ softness: v }); },
+      onWob: e => { const v = +e.target.value / 100; this.setState({ wobble: v }); this.sim && this.sim.setParams({ wobble: v }); },
+      onDrop: () => this.sim && this.sim.drop(),
+      onReset: () => this.sim && this.sim.reset(),
+      lattice: s.lattice,
+      onLattice: e => { this.setState({ lattice: e.target.checked }); this.sim && this.sim.setLattice(e.target.checked); }
+    };
+  }
+}
+</script>
+</body>
+</html>
